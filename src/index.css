@@ -1,0 +1,246 @@
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/InstrumentSerif-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/InstrumentSerif-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/Inter-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./assets/fonts/Inter-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./assets/fonts/Inter-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./assets/fonts/Inter-Bold.ttf') format('truetype');
+}
+
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0A0A0A;
+  --color-foreground: #F0EDE6;
+  --color-muted-foreground: #B0A898;
+  --color-card: #F0EDE6;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-hero-subtitle: #B0A898;
+  
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+}
+
+:root {
+  --background: 0 0% 4%;
+  --foreground: 40 13% 92%;
+  --muted-foreground: 40 10% 64%;
+  --card: 40 13% 92%;
+  --border: 0 0% 100% / 12%;
+  --hero-subtitle: 40 10% 64%;
+}
+
+html, body {
+  background-color: #0A0A0A;
+  color: #F0EDE6;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.015);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+    rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+    rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   TEXAS COLOR PALETTE SYSTEM (Black & Gold for Texas Gateway Multi Services Group)
+   Adaptive CSS overrides that remap the hardcoded theme colors globally.
+   ========================================================================== */
+
+/* 1. Rich Black Backgrounds (Replaces #1B2C6B) */
+html, body, .bg-\[\#1B2C6B\] {
+  background-color: #0A0A0A !important;
+}
+
+/* 2. Charcoal Card & Section Backgrounds (Replaces #101F4C) */
+.bg-\[\#101F4C\] {
+  background-color: #1A1A1A !important;
+}
+.bg-\[\#101F4C\]\/40 {
+  background-color: #2B2B2B !important; /* Dark surface for nested cards on dark background */
+}
+.bg-\[\#101F4C\]\/75 {
+  background-color: rgba(26, 26, 26, 0.75) !important;
+}
+.bg-\[\#101F4C\]\/80 {
+  background-color: rgba(26, 26, 26, 0.8) !important;
+}
+.hover\:bg-\[\#101F4C\]\/75:hover {
+  background-color: rgba(26, 26, 26, 0.75) !important;
+}
+
+/* 3. Gold Accent (Replaces #B8922A) */
+.text-\[\#B8922A\],
+.group-hover\:text-\[\#B8922A\]:hover {
+  color: #C9A84C !important;
+}
+
+.bg-\[\#B8922A\] {
+  background-color: #C9A84C !important;
+}
+
+.border-\[\#B8922A\],
+.border-\[\#B8922A\]\/30,
+.border-\[\#B8922A\]\/40,
+.border-\[\#B8922A\]\/20,
+.border-\[\#B8922A\]\/15,
+.border-\[\#B8922A\]\/25 {
+  border-color: #C9A84C !important;
+}
+
+.fill-\[\#B8922A\] {
+  fill: #C9A84C !important;
+}
+
+.bg-\[\#B8922A\]\/10 {
+  background-color: rgba(201, 168, 76, 0.1) !important;
+}
+.bg-\[\#B8922A\]\/15 {
+  background-color: rgba(201, 168, 76, 0.15) !important;
+}
+.bg-\[\#B8922A\]\/20 {
+  background-color: rgba(201, 168, 76, 0.2) !important;
+}
+.bg-\[\#B8922A\]\/25 {
+  background-color: rgba(201, 168, 76, 0.25) !important;
+}
+
+/* 4. Light Gold Hover States (Replaces #a37f20) */
+.bg-\[\#a37f20\],
+.hover\:bg-\[\#a37f20\]:hover {
+  background-color: #E8C96A !important;
+  color: #0A0A0A !important;
+}
+.text-\[\#a37f20\] {
+  color: #E8C96A !important;
+}
+
+/* 5. Cream Gold / Off-white Sections & Cards (Replaces #F5F5F0) */
+.bg-\[\#F5F5F0\] {
+  background-color: #F0EDE6 !important; /* Off-white for light-mode content areas & backgrounds */
+}
+.text-\[\#F5F5F0\] {
+  color: #F0EDE6 !important;
+}
+.text-\[\#F5F5F0\]\/85 {
+  color: #B0A898 !important;
+}
+.border-\[\#F5F5F0\] {
+  border-color: #F0EDE6 !important;
+}
+
+/* Sub-card backgrounds or inquiry bubbles mapping to Cream Gold */
+.bg-\[\#F5F5F0\]\/30 {
+  background-color: #F5E6B8 !important; /* Cream gold subtle background */
+}
+.bg-\[\#F5F5F0\]\/50 {
+  background-color: #F5E6B8 !important; /* Cream gold subtle background */
+}
+
+/* 6. Neutral text color overrides for readability */
+.text-\[\#2C2C2C\] {
+  color: #1A1A1A !important; /* Charcoal dark text inside light cards */
+}
+.text-\[\#2C2C2C\]\/50 {
+  color: #6B6157 !important; /* Secondary text */
+}
+.text-\[\#2C2C2C\]\/75, .text-\[\#2C2C2C\]\/80, .text-\[\#2C2C2C\]\/85 {
+  color: #6B6157 !important; /* Secondary text */
+}
+
+/* 7. Star Icons & Secondary Accents */
+.from-\[\#6B1A1A\] {
+  --tw-gradient-from: #1A1A1A !important;
+}
+.bg-\[\#6B1A1A\]\/35 {
+  background-color: rgba(43, 43, 43, 0.4) !important;
+}
+.border-\[\#6B1A1A\]\/45 {
+  border-color: rgba(201, 168, 76, 0.3) !important; /* Gold borders */
+}
+
+/* 8. Glowing effects and shadow remapping */
+.hover\:shadow-\[\#B8922A\]\/20:hover {
+  box-shadow: 0 10px 15px -3px rgba(201, 168, 76, 0.2), 0 4px 6px -2px rgba(201, 168, 76, 0.1) !important;
+}
+.accent-\[\#B8922A\] {
+  accent-color: #C9A84C !important;
+}
+.ring-\[\#B8922A\]\/20 {
+  --tw-ring-color: rgba(201, 168, 76, 0.2) !important;
+}
+.group-hover\:bg-\[\#B8922A\]\/15:hover {
+  background-color: rgba(201, 168, 76, 0.15) !important;
+}
+.group-hover\:border-\[\#B8922A\]\/30:hover {
+  border-color: rgba(201, 168, 76, 0.3) !important;
+}
+
+/* 9. Bottom background gradient remapping */
+#hero_bottom_gradient {
+  background-image: linear-gradient(to top, #0A0A0A, transparent) !important;
+}
+
