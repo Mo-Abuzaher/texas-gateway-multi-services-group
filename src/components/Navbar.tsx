@@ -59,9 +59,15 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
           >
             <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 flex items-center justify-center bg-transparent" id="navbar_logo_container">
               <img
-                src="/assets/images/tx_multi_services_group.png"
+                src="/assets/images/tx_multi_services_group-160.webp"
+                srcSet="/assets/images/tx_multi_services_group-160.webp 160w, /assets/images/tx_multi_services_group-320.webp 320w"
+                sizes="(min-width: 1024px) 80px, (min-width: 640px) 64px, 48px"
                 alt="Texas Gateway Multi Services Group logo"
                 className="w-full h-full object-contain transition-all duration-300 group-hover:scale-105"
+                width={80}
+                height={80}
+                fetchPriority="high"
+                decoding="async"
                 referrerPolicy="no-referrer"
                 id="navbar_logo"
               />

@@ -41,7 +41,8 @@ export default function Hero({ lang, setLang, currentPage, setCurrentPage }: Pro
     >
        {/* 1. Background Video Layer */}
        <SeamlessVideo
-         src="/assets/images/hero_bg_video.mp4"
+         src="/assets/images/hero_bg_video-fast.mp4"
+         poster="/assets/images/hero_bg_poster.jpg"
          className="z-0 pointer-events-none blur-[8px] scale-105"
          id="hero_bg_video"
        />

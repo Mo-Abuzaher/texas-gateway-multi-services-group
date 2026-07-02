@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from "react";
 
 interface SeamlessVideoProps {
   src: string;
+  poster?: string;
   className?: string;
   id?: string;
 }
 
-export default function SeamlessVideo({ src, className = "", id }: SeamlessVideoProps) {
+export default function SeamlessVideo({ src, poster, className = "", id }: SeamlessVideoProps) {
   const videoRefA = useRef<HTMLVideoElement>(null);
   const videoRefB = useRef<HTMLVideoElement>(null);
 
@@ -33,6 +34,7 @@ export default function SeamlessVideo({ src, className = "", id }: SeamlessVideo
     videoA.currentTime = 0;
     videoA.muted = true;
     videoA.playsInline = true;
+    videoA.load();
 
     videoB.currentTime = 0;
     videoB.muted = true;
@@ -154,13 +156,19 @@ export default function SeamlessVideo({ src, className = "", id }: SeamlessVideo
   const activeOpacityB = activeVideo === "B" ? 1 : 0;
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden" id={id}>
+    <div
+      className="absolute inset-0 w-full h-full overflow-hidden bg-cover bg-center"
+      id={id}
+      style={poster ? { backgroundImage: `url(${poster})` } : undefined}
+    >
       <video
         ref={videoRefA}
         src={src}
         muted
         playsInline
+        autoPlay
         preload="auto"
+        poster={poster}
         className={`${className} transition-opacity duration-1000 ease-in-out absolute inset-0 w-full h-full object-cover`}
         style={{ opacity: activeOpacityA }}
       />
@@ -169,7 +177,8 @@ export default function SeamlessVideo({ src, className = "", id }: SeamlessVideo
         src={src}
         muted
         playsInline
-        preload="auto"
+        preload="metadata"
+        poster={poster}
         className={`${className} transition-opacity duration-1000 ease-in-out absolute inset-0 w-full h-full object-cover`}
         style={{ opacity: activeOpacityB }}
       />
