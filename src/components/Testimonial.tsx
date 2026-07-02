@@ -63,7 +63,7 @@ export default function Testimonial({ lang = "en" }: TestimonialProps) {
       <div className="max-w-3xl mx-auto flex flex-col items-start w-full" id="testimonial_content">
         {/* Transparent quote mark image from assets */}
         <img
-          src="/src/assets/images/quote_symbol_transparent.png"
+          src="/assets/images/quote_symbol_transparent.png"
           alt="Quote mark"
           className="w-20 h-14 object-contain select-none opacity-85 -ms-6 /* RTL: mirrored */ mb-4"
           referrerPolicy="no-referrer"
@@ -81,26 +81,26 @@ export default function Testimonial({ lang = "en" }: TestimonialProps) {
         >
           {words.map((word, i) => {
             const isLast = i === words.length - 1;
-            if (isLast) {
-              return (
-                <span className="relative inline-block" key={`${word}-${i}`}>
-                  <WordReveal
-                    word={word}
-                    index={i}
-                    total={words.length}
-                    scrollProgress={scrollYProgress}
-                    lang={lang}
-                  />
-                  <img
-                    src="/src/assets/images/quote_symbol_transparent.png"
-                    alt="Closing quote"
-                    className="absolute top-full -end-6 /* RTL: mirrored */ w-20 h-14 object-contain select-none rotate-180 opacity-85 mt-4"
-                    referrerPolicy="no-referrer"
-                    id="testimonial_closing_quote"
-                  />
-                </span>
-              );
-            }
+                if (isLast) {
+                  return (
+                    <span className="relative inline-block" key={`${word}-${i}`}>
+                      <WordReveal
+                        word={word}
+                        index={i}
+                        total={words.length}
+                        scrollProgress={scrollYProgress}
+                        lang={lang}
+                      />
+                      <img
+                        src="/assets/images/quote_symbol_transparent.png"
+                        alt="Closing quote"
+                        className="absolute top-full -end-6 /* RTL: mirrored */ w-20 h-14 object-contain select-none rotate-180 opacity-85 mt-4"
+                        referrerPolicy="no-referrer"
+                        id="testimonial_closing_quote"
+                      />
+                    </span>
+                  );
+                }
             return (
               <WordReveal
                 key={`${word}-${i}`}
@@ -117,7 +117,7 @@ export default function Testimonial({ lang = "en" }: TestimonialProps) {
         {/* Author row */}
         <div className="flex items-center gap-4" id="testimonial_author_row">
           <img
-            src="/src/assets/images/khaled abuzaher.jpg"
+            src="/assets/images/khaled abuzaher.jpg"
             alt="Khaled Abuzaher avatar"
             className="w-14 h-14 rounded-full border-[3px] border-[#B8922A] object-cover shadow-lg"
             referrerPolicy="no-referrer"

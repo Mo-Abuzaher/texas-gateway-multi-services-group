@@ -78,16 +78,16 @@ export default function FounderProfile({ lang, onBack }: Props) {
                 {/* Photo frame with double gold circle */}
                 <div className="relative w-48 h-48 mx-auto rounded-full p-[4px] bg-gradient-to-b from-[#B8922A] to-[#B8922A]/30 shadow-2xl">
                   <div className="w-full h-full rounded-full overflow-hidden bg-[#F5F5F0] relative">
-                    <img
-                      src="/src/assets/images/khaled abuzaher.jpg"
-                      alt="Dr. Khaled M. Abu Zaher"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        // Fallback placeholder in case photo is missing
-                        (e.target as HTMLElement).style.display = "none";
-                      }}
-                    />
+                     <img
+                       src="/assets/images/khaled abuzaher.jpg"
+                       alt="Dr. Khaled M. Abu Zaher"
+                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                       referrerPolicy="no-referrer"
+                       onError={(e) => {
+                         // Fallback placeholder in case photo is missing
+                         (e.target as HTMLElement).style.display = "none";
+                       }}
+                     />
                     {/* Fallback avatar text */}
                     <div className="absolute inset-0 flex items-center justify-center bg-white text-[#B8922A] font-sans font-bold text-4xl">
                       KAZ

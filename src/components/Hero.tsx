@@ -39,12 +39,12 @@ export default function Hero({ lang, setLang, currentPage, setCurrentPage }: Pro
       className="relative w-full min-h-screen lg:h-screen overflow-hidden flex flex-col justify-between bg-[#1B2C6B]"
       id="hero_section"
     >
-      {/* 1. Background Video Layer */}
-      <SeamlessVideo
-        src="/src/assets/images/hero_bg_video.mp4"
-        className="z-0 pointer-events-none blur-[8px] scale-105"
-        id="hero_bg_video"
-      />
+       {/* 1. Background Video Layer */}
+       <SeamlessVideo
+         src="/assets/images/hero_bg_video.mp4"
+         className="z-0 pointer-events-none blur-[8px] scale-105"
+         id="hero_bg_video"
+       />
 
       {/* 2. Seamless Header (Navbar) */}
       <Navbar lang={lang} setLang={setLang} currentPage={currentPage} setCurrentPage={setCurrentPage} />
