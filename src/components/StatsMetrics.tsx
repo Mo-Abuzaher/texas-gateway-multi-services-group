@@ -62,15 +62,15 @@ export default function StatsMetrics({ lang }: Props) {
       <div className="max-w-4xl mx-auto w-full relative z-10 text-center space-y-16">
         <div className="space-y-6">
           <span className="text-xs uppercase font-mono tracking-[0.2em] text-[#B8922A] block" id="stats_sub">
-            {t.statsSub || (isAr ? "محفظة الأعمال الاستشارية" : "Practice Portfolio")}
+            {t.statsSub || (isAr ? "نتائج مؤكدة" : "Proven Results")}
           </span>
           <h2 className="text-4xl md:text-5xl font-sans font-medium tracking-tight text-[#2C2C2C] leading-tight max-w-2xl mx-auto" id="stats_title">
             {isAr ? "أقسام خدمات متكاملة. امتثال تام وتنسيق مثالي." : "Integrated Services. Flawless Alignment."}
           </h2>
           <p className="text-sm md:text-base text-[#2C2C2C]/75 leading-relaxed font-sans max-w-2xl mx-auto">
             {isAr 
-              ? "تعتمد الشركات الصغرى والمتوسطة، مكاتب المحاماة، والعائلات على الدقة والمنهجية الفائقة لمجموعة بوابة تكساس للخدمات المتعددة لتسيير المعاملات والتأشيرات، والترجمة المعتمدة، وتوثيق الأبوستيل، والدعم القانوني، والخدمات المالية." 
-              : "Small and Medium Business clients, legal professionals, and families rely on Texas Gateway Multi Services Group’s rigorous methods to prepare visas, process certified translations, secure notary apostilles, assist legal projects, and manage business finance."}
+              ? "تعتمد الشركات الصغرى والمتوسطة، مكاتب المحاماة، والعائلات على الدقة والمنهجية الفائقة لمجموعة بوابة تكساس للخدمات المتعددة لتسيير المعاملات والتأشيرات، والترجمة المعتمدة، وتوثيق الأبوستيل، والدعم القانوني، والخدمات المالية، وتطوير الهياكل التنظيمية والإدارية." 
+              : "Small and Medium Business clients, legal professionals, and families rely on Texas Gateway Multi Services Group’s rigorous methods to prepare visas, process certified translations, secure notary apostilles, assist legal projects, manage business finance, and optimize operational management structures."}
           </p>
         </div>
 

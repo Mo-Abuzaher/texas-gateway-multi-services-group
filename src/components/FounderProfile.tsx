@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "motion/react";
 import { Award, Mail, Phone, Linkedin, ShieldCheck, Star, ArrowLeft } from "lucide-react";
 import { TRANSLATIONS } from "../translations";
@@ -10,6 +11,7 @@ interface Props {
 export default function FounderProfile({ lang, onBack }: Props) {
   const t = TRANSLATIONS[lang];
   const isAr = lang === "ar";
+  const [imageError, setImageError] = useState(false);
 
   const credentials = [
     { title: t.founderExpert, desc: isAr ? "تحليل وتدقيق الشؤون الإجرائية والأنظمة والامتثال الكامل" : "Procedural analysis, regulations audit, and comprehensive compliance management" },
@@ -79,19 +81,21 @@ export default function FounderProfile({ lang, onBack }: Props) {
                 <div className="relative w-48 h-48 mx-auto rounded-full p-[4px] bg-gradient-to-b from-[#B8922A] to-[#B8922A]/30 shadow-2xl">
                   <div className="w-full h-full rounded-full overflow-hidden bg-[#F5F5F0] relative">
                      <img
-                       src="/assets/images/khaled abuzaher.jpg"
+                       src="/assets/images/khaled abuzaher1.jpg"
                        alt="Dr. Khaled M. Abu Zaher"
                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                        referrerPolicy="no-referrer"
                        onError={(e) => {
-                         // Fallback placeholder in case photo is missing
                          (e.target as HTMLElement).style.display = "none";
+                         setImageError(true);
                        }}
                      />
                     {/* Fallback avatar text */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-white text-[#B8922A] font-sans font-bold text-4xl">
-                      KAZ
-                    </div>
+                    {imageError && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-white text-[#B8922A] font-sans font-bold text-4xl">
+                        KAZ
+                      </div>
+                    )}
                   </div>
                 </div>
 

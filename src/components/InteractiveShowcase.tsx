@@ -6,7 +6,7 @@ interface Props {
   lang: "en" | "ar";
 }
 
-type GateId = "gate1" | "gate2" | "gate3" | "gate4" | "gate5";
+type GateId = "gate1" | "gate2" | "gate3" | "gate4" | "gate5" | "gate6";
 
 interface ServiceData {
   title: string;
@@ -288,6 +288,19 @@ export default function InteractiveShowcase({ lang }: Props) {
             "Prior year federal corporate tax return and balance sheet opening records"
           ],
           nextStep: "Connect with our financial assistant. We will organize a ledger audit and setup recurring monthly account reconciliations."
+        },
+        gate6: {
+          title: "Management Services & Consulting",
+          badge: "Gate 6",
+          time: "Flexible Schedules / Retainer Models",
+          authority: "SME Management Board & Independent Advisory Panel",
+          compliance: "All consulting and administrative support are general advisory and do not include licensed law or accounting representation.",
+          requirements: [
+            "Outline of current company organization and staffing structures",
+            "Copies of active policies, checklists, and internal workflows",
+            "Immediate goals, administrative pain points, or efficiency targets"
+          ],
+          nextStep: "Book a complimentary intake interview to audit your SME's operating systems and receive a personalized organizational proposal."
         }
       }
     },
@@ -397,6 +410,19 @@ export default function InteractiveShowcase({ lang }: Props) {
             "الإقرارات الضريبية للسنة الماضية والميزانية الافتتاحية المعتمدة للمؤسسة"
           ],
           nextStep: "ربط حساباتك مع مستشارنا المالي لمراجعة دفاتر المعاملات وتهيئة دورة المحاسبة الشهرية المتكاملة."
+        },
+        gate6: {
+          title: "الخدمات الإدارية والاستشارية للشركات",
+          badge: "البوابة 6",
+          time: "عقود مساندة مرنة / نماذج اشتراك مخصصة ومستمرة",
+          authority: "مجلس الإدارة الإداري والهيئات الاستشارية المستقلة للمجموعة",
+          compliance: "جميع خدماتنا ذات طابع تنظيمي وإداري واستشاري عام، ولا تشمل التمثيل القانوني أو المحاسبي المرخص.",
+          requirements: [
+            "ملخص للهيكل التنظيمي الحالي للشركة وسجلات توزيع المهام",
+            "نسخ من السياسات الداخلية المطبقة ومسارات العمل اليومية الحالية",
+            "الأهداف الأساسية، العقبات التنظيمية، أو مؤشرات الأداء المستهدفة"
+          ],
+          nextStep: "جدولة استشارة أولية مجانية لتقييم الكفاءة التنظيمية لشركتك وتلقي مقترح حلول إدارية مخصص للنمو."
         }
       }
     }
@@ -405,7 +431,7 @@ export default function InteractiveShowcase({ lang }: Props) {
   const currentLanguageContent = content[lang];
   const activeGateData = currentLanguageContent.gates[selectedGate] as ServiceData;
 
-  const gateKeys: GateId[] = ["gate1", "gate2", "gate3", "gate4", "gate5"];
+  const gateKeys: GateId[] = ["gate1", "gate2", "gate3", "gate4", "gate5", "gate6"];
 
   return (
     <section

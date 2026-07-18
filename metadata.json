@@ -2,5 +2,7 @@
   "name": "Texas Gateway Multi Services Group",
   "description": "Premium Multi Services portal by Texas Gateway Group.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": [
+    ""
+  ]
 }

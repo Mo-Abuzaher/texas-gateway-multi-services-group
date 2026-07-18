@@ -2,12 +2,13 @@ import { useState } from "react";
 import { ChevronDown, Menu, X, Languages } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { TRANSLATIONS } from "../translations";
+import { PageId, getPathForPage } from "../seo";
 
 interface Props {
   lang: "en" | "ar";
   setLang: (lang: "en" | "ar") => void;
-  currentPage: "home" | "about" | "gate1" | "gate2" | "gate3" | "gate4" | "gate5" | "payments" | "terms";
-  setCurrentPage: (page: "home" | "about" | "gate1" | "gate2" | "gate3" | "gate4" | "gate5" | "payments" | "terms") => void;
+  currentPage: PageId;
+  setCurrentPage: (page: PageId) => void;
 }
 
 export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: Props) {
@@ -17,7 +18,7 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
   const t = TRANSLATIONS[lang];
   const isAr = lang === "ar";
 
-  const handleNavClick = (sectionId: string, targetPage: "home" | "about" | "gate1" | "gate2" | "gate3" | "gate4" | "gate5" | "payments" | "terms") => {
+  const handleNavClick = (sectionId: string, targetPage: PageId) => {
     setIsOpen(false);
     if (targetPage === "home") {
       setCurrentPage("home");
@@ -45,6 +46,7 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
     { id: "gate3", title: t.gate3Title, tag: t.gate3Tag },
     { id: "gate4", title: t.gate4Title, tag: t.gate4Tag },
     { id: "gate5", title: t.gate5Title, tag: t.gate5Tag },
+    { id: "gate6", title: t.gate6Title, tag: t.gate6Tag },
   ] as const;
 
   return (
@@ -59,9 +61,7 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
           >
             <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 flex items-center justify-center bg-transparent" id="navbar_logo_container">
               <img
-                src="/assets/images/tx_multi_services_group-160.webp"
-                srcSet="/assets/images/tx_multi_services_group-160.webp 160w, /assets/images/tx_multi_services_group-320.webp 320w"
-                sizes="(min-width: 1024px) 80px, (min-width: 640px) 64px, 48px"
+                src={isAr ? "/assets/images/tx_logo_arabic.png" : "/assets/images/tx_logo_english.png"}
                 alt="Texas Gateway Multi Services Group logo"
                 className="w-full h-full object-contain transition-all duration-300 group-hover:scale-105"
                 width={80}
@@ -78,10 +78,11 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
           </button>
 
           {/* Desktop links */}
-          <div className="fixed top-6 left-1/2 -translate-x-1/2 hidden lg:flex items-center gap-4 xl:gap-6 bg-black/65 backdrop-blur-md border border-white/10 rounded-full px-6 py-2.5 shadow-lg hover:border-white/20 hover:bg-black/75 transition-all duration-300 z-[100]" id="navbar_links">
+          <div className="fixed top-6 left-1/2 -translate-x-1/2 hidden lg:flex items-center gap-2.5 xl:gap-6 bg-black/65 backdrop-blur-md border border-white/10 rounded-full px-4 xl:px-6 py-1.5 xl:py-2.5 shadow-lg hover:border-white/20 hover:bg-black/75 transition-all duration-300 z-[100]" id="navbar_links">
             <button
               onClick={() => handleNavClick("hero_section", "home")}
-              className={`text-sm font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none focus:outline-none ${
+              data-href={getPathForPage("home")}
+              className={`text-xs xl:text-sm font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none focus:outline-none ${
                 currentPage === "home" ? "text-[#B8922A]" : "text-white/85 hover:text-[#B8922A]"
               }`}
             >
@@ -95,13 +96,13 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
               onMouseLeave={() => setDesktopServicesOpen(false)}
             >
               <button
-                className={`text-sm font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none focus:outline-none flex items-center gap-1.5 ${
+                className={`text-xs xl:text-sm font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none focus:outline-none flex items-center gap-1 ${
                   currentPage.startsWith("gate") ? "text-[#B8922A]" : "text-white/85 hover:text-[#B8922A]"
                 }`}
               >
                 <span>{t.navServices}</span>
                 <ChevronDown 
-                  className={`w-4 h-4 transition-transform duration-200 ease-out ${
+                  className={`w-3.5 h-3.5 xl:w-4 xl:h-4 transition-transform duration-200 ease-out ${
                     desktopServicesOpen ? "rotate-0 text-[#B8922A]" : "rtl:rotate-90 ltr:-rotate-90 text-white/70"
                   }`} 
                 />
@@ -125,6 +126,7 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
                           handleNavClick("", srv.id);
                           setDesktopServicesOpen(false);
                         }}
+                        data-href={getPathForPage(srv.id)}
                         className="w-full px-4 py-2 text-xs sm:text-sm text-start /* RTL: mirrored */ text-white/90 hover:text-[#B8922A] hover:bg-white/5 transition-colors flex flex-col gap-0.5 border-none bg-transparent cursor-pointer focus:outline-none rounded-lg"
                       >
                         <span className="text-[10px] font-mono font-bold text-[#B8922A] uppercase tracking-wider">{srv.tag}</span>
@@ -149,7 +151,8 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
 
             <button
               onClick={() => handleNavClick("", "about")}
-              className={`text-sm font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none focus:outline-none ${
+              data-href={getPathForPage("about")}
+              className={`text-xs xl:text-sm font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none focus:outline-none ${
                 currentPage === "about" ? "text-[#B8922A]" : "text-white/85 hover:text-[#B8922A]"
               }`}
               id="about_nav_link"
@@ -159,7 +162,8 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
             
             <button
               onClick={() => handleNavClick("", "payments")}
-              className={`text-sm font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none focus:outline-none ${
+              data-href={getPathForPage("payments")}
+              className={`text-xs xl:text-sm font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none focus:outline-none ${
                 currentPage === "payments" ? "text-[#B8922A]" : "text-white/85 hover:text-[#B8922A]"
               }`}
               id="payments_nav_link"
@@ -169,7 +173,7 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
             
             <button
               onClick={() => handleNavClick("contact", "home")}
-              className="text-sm font-medium text-white/85 hover:text-[#B8922A] transition-colors duration-200 cursor-pointer bg-transparent border-none focus:outline-none"
+              className="text-xs xl:text-sm font-medium text-white/85 hover:text-[#B8922A] transition-colors duration-200 cursor-pointer bg-transparent border-none focus:outline-none"
             >
               {t.navContact}
             </button>
@@ -177,7 +181,7 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
         </div>
 
         {/* Right side: Language switcher + Action button & Mobile toggle */}
-        <div className="flex items-center gap-3 sm:gap-6 md:gap-8 lg:gap-10">
+        <div className="flex items-center gap-3 sm:gap-6 md:gap-8 lg:gap-4 xl:gap-10">
           
           {/* Elegant Language Switcher Button */}
           <button
@@ -221,6 +225,7 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
                     <button
                       onClick={() => handleNavClick("hero_section", "home")}
                       className="w-full py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 px-3 rounded-md transition-colors border-none bg-transparent focus:outline-none cursor-pointer text-start /* RTL: mirrored */"
+                      data-href={getPathForPage("home")}
                     >
                       {t.navHome}
                     </button>
@@ -243,6 +248,7 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
                             <button
                               key={srv.id}
                               onClick={() => handleNavClick("", srv.id)}
+                              data-href={getPathForPage(srv.id)}
                               className="w-full py-2 text-xs text-white/80 hover:text-white text-start /* RTL: mirrored */ border-none bg-transparent cursor-pointer"
                             >
                               <span className="text-[#B8922A] font-bold mr-1 ml-1">•</span> {srv.title}
@@ -254,6 +260,7 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
 
                     <button
                       onClick={() => handleNavClick("", "about")}
+                      data-href={getPathForPage("about")}
                       className={`w-full py-2 text-sm font-medium hover:text-white hover:bg-white/10 px-3 rounded-md transition-colors border-none bg-transparent focus:outline-none cursor-pointer text-start /* RTL: mirrored */ ${
                         currentPage === "about" ? "text-[#B8922A]" : "text-white/90"
                       }`}
@@ -263,6 +270,7 @@ export default function Navbar({ lang, setLang, currentPage, setCurrentPage }: P
                     
                     <button
                       onClick={() => handleNavClick("", "payments")}
+                      data-href={getPathForPage("payments")}
                       className={`w-full py-2 text-sm font-medium hover:text-white hover:bg-white/10 px-3 rounded-md transition-colors border-none bg-transparent focus:outline-none cursor-pointer text-start /* RTL: mirrored */ ${
                         currentPage === "payments" ? "text-[#B8922A]" : "text-white/90"
                       }`}

@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { 
   Scale, 
   Globe, 
@@ -15,7 +15,8 @@ import {
   Heart,
   PlusCircle,
   HelpCircle,
-  Check
+  Check,
+  Briefcase
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { TRANSLATIONS } from "../translations";
@@ -56,6 +57,26 @@ export default function Sectors({ lang, onSelectGatePage }: Props) {
 
   // State for currently hovered Gate card to apply dimming/blurring on siblings
   const [hoveredGateId, setHoveredGateId] = useState<number | null>(null);
+
+  // State to track screen size for dynamic inline drawer positioning
+  const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Determine grid column count to group inline drawers accordingly
+  let cols = 1;
+  if (windowWidth >= 1280) {
+    cols = 6;
+  } else if (windowWidth >= 1024) {
+    cols = 3;
+  } else if (windowWidth >= 768) {
+    cols = 2;
+  }
 
   const gatesData = [
     {
@@ -294,6 +315,63 @@ export default function Sectors({ lang, onSelectGatePage }: Props) {
           items: [t.gate5BookkeepingDesc]
         }
       ]
+    },
+    {
+      id: 6,
+      tag: t.gate6Tag,
+      title: t.gate6Title,
+      desc: t.gate6Desc,
+      icon: Briefcase,
+      color: "#0284C7", // Sky blue/Professional blue accent
+      checklist: isAr ? [
+        "الاستشارات الإدارية والحلول التنظيمية المتكاملة",
+        "تطوير السياسات الداخلية وتحسين سير العمليات",
+        "خدمات الدعم المكتبي والمتابعة الإدارية للشركات"
+      ] : [
+        "Administrative Advisory & Organization Solutions",
+        "Internal Policy Development & Workflow Improvement",
+        "Complete SME Office & Comprehensive Administrative Support"
+      ],
+      subsections: [
+        {
+          title: isAr ? "الاستشارات الإدارية والتنظيمية" : "Administrative Consulting & Structures",
+          items: isAr ? [
+            "الاستشارات الإدارية للشركات الصغيرة والمتوسطة",
+            "المساعدة في بناء هيكل إداري أكثر كفاءة",
+            "حلول تنظيمية عملية للشركات الناشئة والنامية"
+          ] : [
+            "Administrative consulting for small and medium-sized businesses",
+            "Assistance in building a more efficient administrative structure",
+            "Practical organizational solutions for startups and growing companies"
+          ]
+        },
+        {
+          title: isAr ? "تطوير العمليات والسياسات الداخلية" : "Internal Policies & Process Engineering",
+          items: isAr ? [
+            "تنظيم وتطوير العمليات والوظائف الداخلية للشركات",
+            "إعداد السياسات والإجراءات وأدلة العمل المعتمدة",
+            "تحسين سير العمل وزيادة مستويات الإنتاجية والأداء"
+          ] : [
+            "Internal process organization and development",
+            "Policy and procedure creation with custom employee guides",
+            "Workflow improvement and overall organizational productivity enhancement"
+          ]
+        },
+        {
+          title: isAr ? "خدمات المتابعة الإدارية والدعم المكتبي" : "Office Support & Daily Execution Assistance",
+          items: isAr ? [
+            "تنظيم الملفات والسجلات والمتابعة الإدارية المتكاملة",
+            "دعم التخطيط والتنفيذ اليومي للأعمال والشركاء",
+            "خدمات دعم المكاتب وإدارة الاتصالات الرسمية والداخلية",
+            "تطوير الأداء المؤسسي المستدام"
+          ] : [
+            "File organization and administrative record keeping",
+            "Daily planning, task tracking, and business execution support",
+            "Complete office and general business support services",
+            "Organizational performance development"
+          ]
+        }
+      ]
     }
   ];
 
@@ -361,6 +439,20 @@ export default function Sectors({ lang, onSelectGatePage }: Props) {
         "معالجة كاملة لدفاتر الرواتب والأجور واقتطاع الضرائب وتوفير الامتثال التام لقوانين وزارة العمل.",
         "خدمات إمساك الدفاتر المحاسبية ومطابقة الحسابات البنكية الدورية وصياغة التقارير المالية والربحية."
       ]
+    },
+    6: {
+      en: [
+        "Tailored administrative consulting and practical organizational designs for growing SMEs.",
+        "Custom policy guidelines, employee handbooks, and operational process documentation.",
+        "Dedicated daily workflow optimization to streamline output and elevate productivity.",
+        "Secure record keeping, administrative tracking, and business office support."
+      ],
+      ar: [
+        "استشارات إدارية مخصصة وتصميم هياكل عملية تلبي متطلبات الشركات الصغيرة والمتوسطة النامية.",
+        "صياغة لوائح السياسات والعمل الداخلية وأدلة الإجراءات الموثقة للشركات والموظفين.",
+        "تسهيل وتحسين مسارات العمل اليومية لرفع الكفاءة التشغيلية والإنتاجية الكلية.",
+        "تنظيم وحفظ السجلات والملفات والمتابعات المكتبية الشاملة لدعم أصحاب الأعمال."
+      ]
     }
   };
 
@@ -369,6 +461,123 @@ export default function Sectors({ lang, onSelectGatePage }: Props) {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const renderGateDrawer = (gateId: number, isMobile: boolean) => {
+    const gate = gatesData.find((g) => g.id === gateId);
+    if (!gate) return null;
+    const IconComp = gate.icon;
+    return (
+      <motion.div
+        key={`gate_drawer_container_${isMobile ? "mob" : "desk"}_${gate.id}`}
+        layout
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 15 }}
+        transition={{ 
+          type: "spring",
+          stiffness: 300,
+          damping: 30,
+          opacity: { duration: 0.25 }
+        }}
+        className={`${isMobile ? "xl:hidden col-span-full" : "hidden xl:block"} w-full bg-white text-[#2C2C2C] border border-[#B8922A]/30 rounded-3xl p-6 md:p-10 shadow-lg relative overflow-hidden mt-4 mb-4 will-change-[transform,opacity]`}
+        id={`gate_drawer_container_${isMobile ? "mob" : "desk"}_${gate.id}`}
+      >
+        {/* Internal decorative star background with GPU layer promotion */}
+        <div className="absolute top-4 right-4 opacity-5 pointer-events-none will-change-transform">
+          <Star className="w-40 h-40 fill-[#B8922A]" />
+        </div>
+
+        <motion.div
+          layout="position"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.22, ease: "easeInOut" }}
+          className="space-y-8 relative z-10"
+        >
+          {/* Drawer Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#2C2C2C]/10">
+            <div className="flex items-center gap-4">
+              <div className="p-4 bg-[#1B2C6B] text-white rounded-2xl">
+                <IconComp className="w-7 h-7" />
+              </div>
+              <div>
+                <span className="text-xs uppercase font-mono text-[#B8922A] tracking-widest block font-bold">
+                  {gate.tag}
+                </span>
+                <h3 className="text-2xl md:text-3xl font-sans font-bold tracking-tight mt-0.5 flex flex-wrap justify-start">
+                  {gate.title.split(" ").map((word, i) => (
+                    <DrawerTitleWordReveal 
+                      key={`${word}-${i}`} 
+                      word={word} 
+                      index={i} 
+                    />
+                  ))}
+                </h3>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3 self-start md:self-auto">
+              {onSelectGatePage && (
+                <button
+                  onClick={() => onSelectGatePage(gate.id)}
+                  className="bg-[#B8922A] text-white px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-[#a37f20] transition-colors flex items-center gap-2 shadow-lg focus:outline-none cursor-pointer"
+                >
+                  <span>{isAr ? "الصفحة المخصصة" : "View Full Page"}</span>
+                  <ChevronRight className="w-4 h-4 rtl:rotate-180 /* RTL: mirrored */" />
+                </button>
+              )}
+              <button
+                onClick={scrollToContact}
+                className="bg-[#1B2C6B] text-white px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-[#1B2C6B]/90 transition-colors flex items-center gap-2 shadow-lg focus:outline-none cursor-pointer"
+              >
+                <span>{t.heroCta}</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Description Paragraph */}
+          <p className="text-base leading-relaxed text-[#2C2C2C]/95 font-sans max-w-4xl text-start">
+            {gate.desc}
+          </p>
+
+          {/* Summarized Important Points List */}
+          <div className="space-y-4 pt-4">
+            <h4 className="text-base font-bold text-black uppercase tracking-wider font-mono text-start">
+              {isAr ? "أبرز نقاط الخدمة والحلول الأساسية" : "Core Service Highlights & Summary"}
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(summaries[gate.id]?.[lang] || []).map((point, pIdx) => (
+                <div 
+                  key={pIdx} 
+                  className="bg-white border border-[#2C2C2C]/5 p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex items-start gap-3"
+                >
+                  <div className="w-7 h-7 rounded-full bg-[#B8922A]/10 flex items-center justify-center text-[#B8922A] shrink-0 mt-0.5">
+                    <Check className="w-4 h-4 stroke-[3]" />
+                  </div>
+                  <span className="text-xs sm:text-sm font-semibold text-[#2C2C2C] leading-relaxed font-sans text-start">
+                    {point}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Star decorative checklist seal */}
+          <div className="flex items-center gap-2 text-xs text-[#2C2C2C]/85 bg-[#B8922A]/15 border border-[#B8922A]/25 px-4 py-3 rounded-xl max-w-2xl text-start">
+            <ShieldCheck className="w-4.5 h-4.5 text-emerald-700 shrink-0" />
+            <span>
+              {isAr 
+                ? "تخضع جميع الخدمات المقدمة ضمن هذا القسم لأعلى مستويات الرقابة المهنية والتدقيق المستمر." 
+                : "All operations within this specialized Gate follow rigorous state and federal regulatory audit procedures."}
+            </span>
+          </div>
+
+        </motion.div>
+      </motion.div>
+    );
   };
 
   return (
@@ -401,12 +610,31 @@ export default function Sectors({ lang, onSelectGatePage }: Props) {
           </div>
         </div>
 
-        {/* 5 Gates Horizontal / Grid Selector */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 xl:gap-8 mb-12" id="sectors_gates_selectors">
-          {gatesData.map((gate) => {
+        {/* 6 Gates Horizontal / Grid Selector */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 xl:gap-8 mb-12" id="sectors_gates_selectors">
+          {gatesData.map((gate, currentIndex) => {
             const isSelected = activeGate === gate.id;
             const IconComp = gate.icon;
             const isDimmed = hoveredGateId !== null && hoveredGateId !== gate.id;
+
+            // Determine if the inline drawer should be rendered after this specific card (gate)
+            let shouldRenderInlineDrawer = false;
+            if (activeGate !== null && cols < 6) {
+              const activeIndex = gatesData.findIndex(g => g.id === activeGate);
+              
+              if (cols === 1) {
+                // On mobile (1 col), render immediately after the active card
+                shouldRenderInlineDrawer = (currentIndex === activeIndex);
+              } else if (cols === 2) {
+                // On md tablet (2 cols), render after the end of the active row
+                const targetIndex = Math.floor(activeIndex / 2) * 2 + 1;
+                shouldRenderInlineDrawer = (currentIndex === targetIndex);
+              } else if (cols === 3) {
+                // On lg tablet (3 cols), render after the end of the active row
+                const targetIndex = Math.floor(activeIndex / 3) * 3 + 2;
+                shouldRenderInlineDrawer = (currentIndex === targetIndex);
+              }
+            }
 
             return (
               <Fragment key={gate.id}>
@@ -480,124 +708,19 @@ export default function Sectors({ lang, onSelectGatePage }: Props) {
                   </div>
                 </motion.button>
 
-                {/* Detailed Drawer for Active Gate - Rendered Inline in the Grid */}
-                <AnimatePresence>
-                  {isSelected && (
-                    <motion.div
-                      key={`gate_drawer_container_${gate.id}`}
-                      layout
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 15 }}
-                      transition={{ 
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 30,
-                        opacity: { duration: 0.25 }
-                      }}
-                      className="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-5 bg-white text-[#2C2C2C] border border-[#B8922A]/30 rounded-3xl p-6 md:p-10 shadow-lg relative overflow-hidden mt-4 mb-4 will-change-[transform,opacity]"
-                      id={`gate_drawer_container_${gate.id}`}
-                    >
-                      {/* Internal decorative star background with GPU layer promotion */}
-                      <div className="absolute top-4 right-4 opacity-5 pointer-events-none will-change-transform">
-                        <Star className="w-40 h-40 fill-[#B8922A]" />
-                      </div>
-
-                      <motion.div
-                        layout="position"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.22, ease: "easeInOut" }}
-                        className="space-y-8 relative z-10"
-                      >
-                        {/* Drawer Header */}
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#2C2C2C]/10">
-                          <div className="flex items-center gap-4">
-                            <div className="p-4 bg-[#1B2C6B] text-white rounded-2xl">
-                              <IconComp className="w-7 h-7" />
-                            </div>
-                            <div>
-                              <span className="text-xs uppercase font-mono text-[#B8922A] tracking-widest block font-bold">
-                                {gate.tag}
-                              </span>
-                              <h3 className="text-2xl md:text-3xl font-sans font-bold tracking-tight mt-0.5 flex flex-wrap justify-start">
-                                {gate.title.split(" ").map((word, i) => (
-                                  <DrawerTitleWordReveal 
-                                    key={`${word}-${i}`} 
-                                    word={word} 
-                                    index={i} 
-                                  />
-                                ))}
-                              </h3>
-                            </div>
-                          </div>
-
-                          <div className="flex flex-wrap gap-3 self-start md:self-auto">
-                            {onSelectGatePage && (
-                              <button
-                                onClick={() => onSelectGatePage(gate.id)}
-                                className="bg-[#B8922A] text-white px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-[#a37f20] transition-colors flex items-center gap-2 shadow-lg focus:outline-none cursor-pointer"
-                              >
-                                <span>{isAr ? "الصفحة المخصصة" : "View Full Page"}</span>
-                                <ChevronRight className="w-4 h-4 rtl:rotate-180 /* RTL: mirrored */" />
-                              </button>
-                            )}
-                            <button
-                              onClick={scrollToContact}
-                              className="bg-[#1B2C6B] text-white px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-[#1B2C6B]/90 transition-colors flex items-center gap-2 shadow-lg focus:outline-none cursor-pointer"
-                            >
-                              <span>{t.heroCta}</span>
-                              <ArrowUpRight className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Description Paragraph */}
-                        <p className="text-base leading-relaxed text-[#2C2C2C]/95 font-sans max-w-4xl text-start">
-                          {gate.desc}
-                        </p>
-
-                        {/* Summarized Important Points List */}
-                        <div className="space-y-4 pt-4">
-                          <h4 className="text-base font-bold text-black uppercase tracking-wider font-mono text-start">
-                            {isAr ? "أبرز نقاط الخدمة والحلول الأساسية" : "Core Service Highlights & Summary"}
-                          </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {(summaries[gate.id]?.[lang] || []).map((point, pIdx) => (
-                              <div 
-                                key={pIdx} 
-                                className="bg-white border border-[#2C2C2C]/5 p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex items-start gap-3"
-                              >
-                                <div className="w-7 h-7 rounded-full bg-[#B8922A]/10 flex items-center justify-center text-[#B8922A] shrink-0 mt-0.5">
-                                  <Check className="w-4 h-4 stroke-[3]" />
-                                </div>
-                                <span className="text-xs sm:text-sm font-semibold text-[#2C2C2C] leading-relaxed font-sans text-start">
-                                  {point}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Star decorative checklist seal */}
-                        <div className="flex items-center gap-2 text-xs text-[#2C2C2C]/85 bg-[#B8922A]/15 border border-[#B8922A]/25 px-4 py-3 rounded-xl max-w-2xl text-start">
-                          <ShieldCheck className="w-4.5 h-4.5 text-emerald-700 shrink-0" />
-                          <span>
-                            {isAr 
-                              ? "تخضع جميع الخدمات المقدمة ضمن هذا القسم لأعلى مستويات الرقابة المهنية والتدقيق المستمر." 
-                              : "All operations within this specialized Gate follow rigorous state and federal regulatory audit procedures."}
-                          </span>
-                        </div>
-
-                      </motion.div>
-                    </motion.div>
-                  )}
+                {/* Mobile/Tablet drawer expands inline directly after this card/row */}
+                <AnimatePresence mode="wait">
+                  {shouldRenderInlineDrawer && renderGateDrawer(activeGate, true)}
                 </AnimatePresence>
               </Fragment>
             );
           })}
         </div>
+
+        {/* Detailed Drawer for Active Gate - Rendered Outside the Grid (visible only on desktop) */}
+        <AnimatePresence mode="wait">
+          {activeGate !== null && renderGateDrawer(activeGate, false)}
+        </AnimatePresence>
 
       </div>
     </section>

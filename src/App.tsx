@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Hero from "./components/Hero";
 import Testimonial from "./components/Testimonial";
 import FounderProfile from "./components/FounderProfile";
@@ -11,11 +11,158 @@ import ServiceDetail from "./components/ServiceDetail";
 import Navbar from "./components/Navbar";
 import PaymentMethods from "./components/PaymentMethods";
 import TermsAndPolicies from "./components/TermsAndPolicies";
+import {
+  DEFAULT_SITE_URL,
+  PageId,
+  buildCanonicalUrl,
+  buildOrganizationJsonLd,
+  buildServiceJsonLd,
+  getMetaForPage,
+  getPageFromPath,
+  getPathForPage,
+  getServiceByGateId,
+  getServiceByPageId,
+} from "./seo";
+
+const ensureMetaTag = (selector: string, createTag: () => HTMLMetaElement | HTMLLinkElement) => {
+  const existing = document.head.querySelector(selector) as HTMLMetaElement | HTMLLinkElement | null;
+  if (existing) return existing;
+  const tag = createTag();
+  document.head.appendChild(tag);
+  return tag;
+};
+
+const setMetaContent = (selector: string, createTag: () => HTMLMetaElement, content: string) => {
+  const tag = ensureMetaTag(selector, createTag) as HTMLMetaElement;
+  tag.setAttribute("content", content);
+};
+
+const setJsonLd = (id: string, data: unknown) => {
+  let script = document.getElementById(id) as HTMLScriptElement | null;
+  if (!script) {
+    script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.id = id;
+    const nonce = document.querySelector('meta[name="csp-nonce"]')?.getAttribute("content");
+    if (nonce) {
+      script.setAttribute("nonce", nonce);
+    }
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(data);
+};
 
 export default function App() {
   const [lang, setLang] = useState<"en" | "ar">("en");
-  const [currentPage, setCurrentPage] = useState<"home" | "about" | "gate1" | "gate2" | "gate3" | "gate4" | "gate5" | "payments" | "terms">("home");
+  const [currentPage, setCurrentPage] = useState<PageId>(() => {
+    if (typeof window === "undefined") return "home";
+    return getPageFromPath(window.location.pathname);
+  });
   const [preselectedSector, setPreselectedSector] = useState<string | undefined>(undefined);
+
+  const navigateToPage = (page: PageId, options?: { replace?: boolean }) => {
+    const path = getPathForPage(page);
+    setCurrentPage(page);
+    if (typeof window !== "undefined" && window.location.pathname !== path) {
+      const method = options?.replace ? "replaceState" : "pushState";
+      window.history[method]({}, "", path);
+    }
+  };
+
+  const navigateHomeAndScroll = (sectionId?: string) => {
+    navigateToPage("home");
+    setTimeout(() => {
+      if (sectionId) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+          return;
+        }
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 100);
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPage(getPageFromPath(window.location.pathname));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const meta = getMetaForPage(currentPage);
+    const canonicalUrl = buildCanonicalUrl(meta.path, DEFAULT_SITE_URL);
+    const imageUrl = buildCanonicalUrl(meta.image, DEFAULT_SITE_URL);
+
+    document.documentElement.lang = lang;
+    document.title = meta.title;
+
+    setMetaContent('meta[name="description"]', () => {
+      const tag = document.createElement("meta");
+      tag.name = "description";
+      return tag;
+    }, meta.metaDescription);
+
+    setMetaContent('meta[name="keywords"]', () => {
+      const tag = document.createElement("meta");
+      tag.name = "keywords";
+      return tag;
+    }, meta.keywords.join(", "));
+
+    setMetaContent('meta[property="og:title"]', () => {
+      const tag = document.createElement("meta");
+      tag.setAttribute("property", "og:title");
+      return tag;
+    }, meta.title);
+
+    setMetaContent('meta[property="og:description"]', () => {
+      const tag = document.createElement("meta");
+      tag.setAttribute("property", "og:description");
+      return tag;
+    }, meta.metaDescription);
+
+    setMetaContent('meta[property="og:url"]', () => {
+      const tag = document.createElement("meta");
+      tag.setAttribute("property", "og:url");
+      return tag;
+    }, canonicalUrl);
+
+    setMetaContent('meta[property="og:image"]', () => {
+      const tag = document.createElement("meta");
+      tag.setAttribute("property", "og:image");
+      return tag;
+    }, imageUrl);
+
+    setMetaContent('meta[name="twitter:title"]', () => {
+      const tag = document.createElement("meta");
+      tag.name = "twitter:title";
+      return tag;
+    }, meta.title);
+
+    setMetaContent('meta[name="twitter:description"]', () => {
+      const tag = document.createElement("meta");
+      tag.name = "twitter:description";
+      return tag;
+    }, meta.metaDescription);
+
+    const canonical = ensureMetaTag('link[rel="canonical"]', () => {
+      const tag = document.createElement("link");
+      tag.rel = "canonical";
+      return tag;
+    }) as HTMLLinkElement;
+    canonical.href = canonicalUrl;
+
+    const service = getServiceByPageId(currentPage);
+    setJsonLd("tgmsg-organization-schema", buildOrganizationJsonLd(DEFAULT_SITE_URL));
+    if (service) {
+      setJsonLd("tgmsg-service-schema", buildServiceJsonLd(service, DEFAULT_SITE_URL));
+    } else {
+      document.getElementById("tgmsg-service-schema")?.remove();
+    }
+  }, [currentPage, lang]);
 
   return (
     <main 
@@ -29,7 +176,7 @@ export default function App() {
           lang={lang} 
           setLang={setLang} 
           currentPage={currentPage} 
-          setCurrentPage={setCurrentPage} 
+          setCurrentPage={navigateToPage} 
         />
       )}
 
@@ -41,7 +188,7 @@ export default function App() {
             lang={lang} 
             setLang={setLang} 
             currentPage={currentPage} 
-            setCurrentPage={setCurrentPage} 
+            setCurrentPage={navigateToPage} 
           />
 
           {/* Section 2: Testimonial Section with scroll word reveal */}
@@ -51,7 +198,10 @@ export default function App() {
           <Sectors 
             lang={lang} 
             onSelectGatePage={(gateId) => {
-              setCurrentPage(`gate${gateId}` as any);
+              const service = getServiceByGateId(gateId);
+              if (service) {
+                navigateToPage(service.pageId);
+              }
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           />
@@ -69,24 +219,21 @@ export default function App() {
         <FounderProfile 
           lang={lang} 
           onBack={() => {
-            setCurrentPage("home");
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigateHomeAndScroll();
           }}
         />
       ) : currentPage === "payments" ? (
         <PaymentMethods 
           lang={lang} 
           onBack={() => {
-            setCurrentPage("home");
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigateHomeAndScroll();
           }}
         />
       ) : currentPage === "terms" ? (
         <TermsAndPolicies 
           lang={lang} 
           onBack={() => {
-            setCurrentPage("home");
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigateHomeAndScroll();
           }}
         />
       ) : (
@@ -95,18 +242,11 @@ export default function App() {
           gateId={parseInt(currentPage.replace("gate", ""))}
           lang={lang}
           onBack={() => {
-            setCurrentPage("home");
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigateHomeAndScroll("sectors_section");
           }}
           onContactSelect={(sector) => {
             setPreselectedSector(sector);
-            setCurrentPage("home");
-            setTimeout(() => {
-              const el = document.getElementById("contact");
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth" });
-              }
-            }, 150);
+            navigateHomeAndScroll("contact");
           }}
         />
       )}
@@ -116,7 +256,7 @@ export default function App() {
         lang={lang} 
         preselectedSector={preselectedSector} 
         onNavigateToTerms={() => {
-          setCurrentPage("terms");
+          navigateToPage("terms");
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />

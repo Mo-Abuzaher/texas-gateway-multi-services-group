@@ -34,6 +34,11 @@ const FAQ_DATA_EN: FAQItem[] = [
       "Under Gate 5, we provide part-time bookkeeping, ledger reconciliation, payroll administration conforming to DOL wage regulations, and state and federal tax preparation (IRS Schedule C, Form 1120S, and Form 1065) designed specifically for small businesses, freelancers, and S-Corporations.",
   },
   {
+    question: "What administrative and consulting services do you offer under Gate 6?",
+    answer:
+      "Under Gate 6 (Management Services & Consulting), we provide professional organizational consulting, internal policy development (SOPs, employee handbooks), operational workflow optimization, and daily administrative/office support specifically engineered for small and medium-sized businesses.",
+  },
+  {
     question: "How does Texas Gateway Multi Services Group secure sensitive personal, corporate, and payroll records?",
     answer:
       "We treat client privacy with high-grade security. All client records, passport credentials, corporate books, tax certificates, and wage documents are protected by premium AES-256 encryption at rest and secure transit protocols, fully complying with enterprise SOC2 safety standards.",
@@ -60,6 +65,11 @@ const FAQ_DATA_AR: FAQItem[] = [
     question: "ما هي خدمات الدعم المالي والضريبي التي تقدمونها للشركات الصغيرة؟",
     answer:
       "من خلال البوابة الخامسة، نوفر مسك الدفاتر المحاسبية، ومطابقة القيود المالية، وإعداد كشوف المرتبات المتوافقة مع قوانين العمل، وتجهيز الإقرارات الضريبية السنوية والربع سنوية (النماذج الفيدرالية لشركات LLC وS-Corp والعمل الفردي) لتوفير رعاية مالية آمنة وموثوقة.",
+  },
+  {
+    question: "ما هي الحلول والخدمات الاستشارية التي تقدمها المجموعة عبر البوابة السادسة؟",
+    answer:
+      "من خلال البوابة السادسة (الخدمات الإدارية والاستشارية)، نوفر استشارات التطوير الإداري والتنظيمي للشركات الصغيرة والمتوسطة، وإعداد أدلة الإجراءات والسياسات الداخلية (SOPs)، وتسهيل مسارات العمل اليومية لرفع الكفاءة التشغيلية، وتقديم خدمات الدعم المكتبي المتكاملة لأصحاب الأعمال.",
   },
   {
     question: "كيف تحمي مجموعة بوابة تكساس للخدمات المتعددة الوثائق الحساسة والبيانات المالية؟",

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { TRANSLATIONS } from "../translations";
+import { SERVICE_SEO_PAGES, getServiceByGateId } from "../seo";
 
 interface Props {
   gateId: number;
@@ -63,6 +64,109 @@ function BlackWordReveal({ word, index, total }: { word: string; index: number; 
     >
       {word}
     </motion.span>
+  );
+}
+
+function ServiceSeoContent({ gateId, isAr }: { gateId: number; isAr: boolean }) {
+  const service = getServiceByGateId(gateId);
+  if (!service) return null;
+
+  const relatedServices = SERVICE_SEO_PAGES.filter((item) => item.gateId !== gateId).slice(0, 5);
+
+  return (
+    <section
+      className="mt-16 bg-[#F5F5F0] text-[#2C2C2C] rounded-2xl border border-[#B8922A]/25 p-6 sm:p-8 lg:p-10 space-y-10"
+      aria-labelledby="service_seo_heading"
+      dir="ltr"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-7 space-y-4">
+          <span className="text-[11px] uppercase font-mono tracking-[0.2em] text-[#B8922A] font-bold">
+            {isAr ? "Service Overview" : "Dedicated Service Page"}
+          </span>
+          <h2 id="service_seo_heading" className="text-2xl md:text-3xl font-sans font-bold tracking-tight text-[#1B2C6B]">
+            {service.primaryKeyword.charAt(0).toUpperCase() + service.primaryKeyword.slice(1)} for Texas Clients
+          </h2>
+          <p className="text-sm md:text-base leading-relaxed text-[#2C2C2C]/80">
+            {service.summary}
+          </p>
+        </div>
+
+        <div className="lg:col-span-5 bg-white border border-black/10 rounded-xl p-5 space-y-3">
+          <h3 className="text-base font-bold text-[#1B2C6B]">Best fit for</h3>
+          <ul className="space-y-2.5">
+            {service.clientFit.map((item) => (
+              <li key={item} className="flex gap-2 text-sm text-[#2C2C2C]/80">
+                <CheckCircle2 className="w-4 h-4 mt-0.5 text-[#B8922A] shrink-0" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white border border-black/10 rounded-xl p-5 space-y-4">
+          <h3 className="text-lg font-bold text-[#1B2C6B]">How our {service.primaryKeyword} process works</h3>
+          <ol className="space-y-3">
+            {service.process.map((step, index) => (
+              <li key={step} className="flex gap-3 text-sm text-[#2C2C2C]/80">
+                <span className="w-7 h-7 rounded-full bg-[#1B2C6B] text-white text-xs font-mono font-bold flex items-center justify-center shrink-0">
+                  {index + 1}
+                </span>
+                <span className="pt-1">{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="bg-white border border-black/10 rounded-xl p-5 space-y-4">
+          <h3 className="text-lg font-bold text-[#1B2C6B]">Common questions about {service.primaryKeyword}</h3>
+          <div className="space-y-4">
+            {service.faqs.map((faq) => (
+              <div key={faq.question} className="border-b border-black/10 pb-4 last:border-b-0 last:pb-0">
+                <h4 className="text-sm font-bold text-[#2C2C2C]">{faq.question}</h4>
+                <p className="mt-1.5 text-sm leading-relaxed text-[#2C2C2C]/75">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-3">
+          <h3 className="text-base font-bold text-[#1B2C6B]">Related Texas Gateway services</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {relatedServices.map((item) => (
+              <a
+                key={item.slug}
+                href={`/services/${item.slug}`}
+                className="text-sm font-semibold text-[#2C2C2C] hover:text-[#B8922A] bg-white border border-black/10 rounded-lg px-3 py-2 transition-colors"
+              >
+                {item.h1}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-base font-bold text-[#1B2C6B]">Authoritative resources</h3>
+          <div className="flex flex-col gap-2.5">
+            {service.externalLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-[#2C2C2C]/80 hover:text-[#B8922A] underline underline-offset-4"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -182,6 +286,23 @@ export default function ServiceDetail({ gateId, lang, onBack, onContactSelect }:
   const [employeeCount, setEmployeeCount] = useState<number>(5);
   const [monthlyTx, setMonthlyTx] = useState<number>(100);
 
+  // Specific content and interactive states for Gate 6: Management & Consulting
+  const [hasSop, setHasSop] = useState<boolean>(false);
+  const [hasOrgChart, setHasOrgChart] = useState<boolean>(false);
+  const [hasDigitalRecord, setHasDigitalRecord] = useState<boolean>(false);
+  const [hasDailyPlan, setHasDailyPlan] = useState<boolean>(false);
+
+  // Calculate SME Administrative Health Score
+  const calculateSmeHealthScore = () => {
+    let score = 0;
+    if (hasSop) score += 25;
+    if (hasOrgChart) score += 25;
+    if (hasDigitalRecord) score += 25;
+    if (hasDailyPlan) score += 25;
+    return score;
+  };
+  const smeHealthScore = calculateSmeHealthScore();
+
   // Help calculate turnaround for Translation
   const calculateTranslation = () => {
     let rate = docType === "standard" ? 0.12 : docType === "complex" ? 0.18 : 0.15;
@@ -243,6 +364,16 @@ export default function ServiceDetail({ gateId, lang, onBack, onContactSelect }:
 
   const finEstimate = calculateFinancialPackage();
 
+  // Gate specific image map
+  const gateImages: Record<number, { en: string; ar: string }> = {
+    1: { en: "/assets/images/visas_en.png", ar: "/assets/images/visas_ar.png" },
+    2: { en: "/assets/images/translation_en.png", ar: "/assets/images/translation_ar.png" },
+    3: { en: "/assets/images/notary_en.png", ar: "/assets/images/notary_ar.png" },
+    4: { en: "/assets/images/legal_en.png", ar: "/assets/images/legal_ar.png" },
+    5: { en: "/assets/images/financial_en.png", ar: "/assets/images/financial_ar.png" },
+    6: { en: "/assets/images/consulting_en.png", ar: "/assets/images/consulting_ar.png" },
+  };
+
   // Gate specific icon map
   const getGateIcon = (id: number) => {
     switch (id) {
@@ -251,6 +382,7 @@ export default function ServiceDetail({ gateId, lang, onBack, onContactSelect }:
       case 3: return FileCheck;
       case 4: return Landmark;
       case 5: return Coins;
+      case 6: return Briefcase;
       default: return Scale;
     }
   };
@@ -295,6 +427,13 @@ export default function ServiceDetail({ gateId, lang, onBack, onContactSelect }:
           desc: t.gate5Desc,
           badgeColor: "bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/20"
         };
+      case 6:
+        return {
+          title: t.gate6Title,
+          tag: t.gate6Tag,
+          desc: t.gate6Desc,
+          badgeColor: "bg-[#0284C7]/10 text-[#0284C7] border-[#0284C7]/20"
+        };
       default:
         return {
           title: "",
@@ -306,6 +445,7 @@ export default function ServiceDetail({ gateId, lang, onBack, onContactSelect }:
   };
 
   const info = getGateHeaderInfo();
+  const seoPage = getServiceByGateId(gateId);
 
   return (
     <div className="w-full min-h-screen bg-[#1B2C6B] text-[#F5F5F0] pb-24 relative" id={`service_detail_page_${gateId}`}>
@@ -361,14 +501,27 @@ export default function ServiceDetail({ gateId, lang, onBack, onContactSelect }:
 
           {/* Icon/Visual Showcase card on the right */}
           <div className="lg:col-span-4 flex justify-center lg:justify-end">
-            <div className="w-full max-w-xs aspect-square rounded-3xl bg-[#101F4C]/80 border border-white/10 p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#B8922A]/10 rounded-full blur-2xl group-hover:bg-[#B8922A]/15 transition-all" />
-              <div className="p-5 bg-[#1B2C6B] border border-white/15 text-[#B8922A] rounded-2xl w-fit">
-                <GateIcon className="w-10 h-10" />
+            <div className="w-full max-w-xs aspect-square rounded-3xl bg-[#101F4C]/80 border border-white/10 overflow-hidden shadow-2xl relative group flex flex-col justify-between">
+              {/* Dynamic background image with fallback */}
+              <div className="absolute inset-0 w-full h-full">
+                <img 
+                  src={isAr ? gateImages[gateId]?.ar : gateImages[gateId]?.en} 
+                  alt={seoPage?.imageAlt || info.title}
+                  className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = 'none';
+                  }}
+                  referrerPolicy="no-referrer"
+                />
+                {/* Golden Gradient Overlay to match golden accents */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#B8922A]/50 via-transparent to-[#E5C158]/10 pointer-events-none" />
               </div>
-              <div>
-                <span className="text-xs font-mono text-[#B8922A]/80 uppercase block tracking-wider">{isAr ? "درجة أمان قصوى" : "AUDITED PATHWAY"}</span>
-                <span className="text-xl font-bold font-sans text-white mt-1 block">{isAr ? "امتثال رقابي بنسبة 100٪" : "100% Regulatory Compliant"}</span>
+
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#B8922A]/15 rounded-full blur-2xl group-hover:bg-[#B8922A]/20 transition-all z-0" />
+              
+              {/* Keep the service logo and remove text & core logos (icons) as requested */}
+              <div className="p-8 flex flex-col justify-between h-full w-full relative z-10">
+                {/* Content cleared per user request to keep only the beautiful service logo and golden gradient */}
               </div>
             </div>
           </div>
@@ -1089,6 +1242,226 @@ export default function ServiceDetail({ gateId, lang, onBack, onContactSelect }:
 
           </div>
         )}
+
+        {/* GATE 6: MANAGEMENT SERVICES & CONSULTING */}
+        {gateId === 6 && (
+          <div className="space-y-12" id="gate_6_details">
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              
+              {/* Left Side: Services lists */}
+              <div className="lg:col-span-7 space-y-6">
+                <h3 className="text-xl md:text-2xl font-bold text-white font-sans">
+                  {isAr ? "خدمات وحلول التطوير الإداري والاستشاري للشركات" : "SME Management Advisory & Structural Solutions"}
+                </h3>
+                <div className="space-y-4">
+                  {[
+                    {
+                      title: isAr ? "الاستشارات الإدارية وتطوير الأعمال" : "Administrative Consulting & Business Growth",
+                      desc: isAr 
+                        ? "تقديم حلول واستشارات مهنية لدعم نمو الشركات الصغيرة والمتوسطة وتنظيم هيكلها الإداري بما يضمن سير العمل بأعلى كفاءة." 
+                        : "Tailored professional consulting to support SME growth, structural organization, and practical administrative models.",
+                      detail: isAr 
+                        ? "دراسة شاملة للاحتياجات الإدارية، وبناء خطط التنمية العملية والحلول الهيكلية المناسبة للشركات المتنامية." 
+                        : "Custom organizational charts, establishing reporting lines, and developing business models adapted to expanding markets."
+                    },
+                    {
+                      title: isAr ? "تنظيم العمليات وتطوير أدلة السياسات" : "Process Engineering & Policy Documentation",
+                      desc: isAr 
+                        ? "صياغة وتوثيق الأدلة التنظيمية والسياسات الداخلية للشركات التي تضمن انضباط العمل، وتحفظ حقوق الشركة والعاملين فيها." 
+                        : "Drafting company policies, operations manuals, employee handbooks, and clear internal operating guidelines.",
+                      detail: isAr 
+                        ? "إعداد السياسات التنظيمية والعمليات واللوائح الداخلية وإجراءات التشغيل القياسية (SOPs)." 
+                        : "Creating standard operating procedures (SOPs), and documenting daily operational workflows to maximize productivity."
+                    },
+                    {
+                      title: isAr ? "خدمات المتابعة الإدارية والدعم المكتبي المتكامل" : "Comprehensive Administrative & Office Support",
+                      desc: isAr 
+                        ? "تنظيم وحفظ المستندات والسجلات الإدارية الكترونياً، ودعم المكاتب، ومتابعة تنفيذ المهام والتخطيط اليومي الفعّال." 
+                        : "Active coordination of file organization, record keeping, daily execution schedules, and business office services.",
+                      detail: isAr 
+                        ? "أرشفة السجلات الإدارية، وإدارة المستندات الهامة، والمتابعة اليومية للمراسلات والمهام العامة." 
+                        : "Secure cataloging, team coordination assistance, calendar management, and professional business support helpers."
+                    }
+                  ].map((feat, idx) => (
+                    <div key={idx} className="flex gap-4 bg-[#101F4C]/40 border border-white/10 p-5 rounded-xl">
+                      <div className="w-10 h-10 rounded-lg bg-[#0284C7]/15 text-[#0284C7] flex items-center justify-center shrink-0">
+                        <Briefcase className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-white font-sans text-sm md:text-base">{feat.title}</h4>
+                        <p className="text-xs text-[#F5F5F0]/90 font-sans mt-1 leading-relaxed">{feat.desc}</p>
+                        <p className="text-[11px] text-[#F5F5F0]/60 font-sans mt-1.5 border-t border-white/5 pt-1.5">{feat.detail}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Additional list of services requested by the user */}
+                <div className="bg-[#101F4C]/20 border border-white/5 rounded-2xl p-6 space-y-4">
+                  <h4 className="font-bold text-white font-sans text-base">{isAr ? "الحلول الإضافية المتاحة في البوابة السادسة:" : "Additional Specialized Service Outlets:"}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    {[
+                      isAr ? "تحسين سير العمل وزيادة الإنتاجية" : "Workflow Improvement & Productivity Enhancement",
+                      isAr ? "تنظيم الملفات والسجلات والمتابعة الإدارية" : "File Organization & Administrative Record Keeping",
+                      isAr ? "دعم التخطيط والتنفيذ اليومي للأعمال" : "Daily Planning & Execution Support",
+                      isAr ? "تطوير الأداء المؤسسي المستدام" : "Sustainable Organizational Performance Development",
+                      isAr ? "خدمات دعم الأعمال والمكاتب والمشتريات" : "Flexible Office & Business Support Services",
+                      isAr ? "حلول تنظيمية عملية للشركات الناشئة" : "Practical Organizational Solutions for Startups"
+                    ].map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-2 text-[#F5F5F0]/80">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#0284C7]" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side: Business Admin Assessment Tool */}
+              <div className="lg:col-span-5">
+                <div className="bg-[#101F4C]/80 border border-white/15 rounded-2xl p-6 space-y-6 shadow-xl">
+                  <div className="flex items-center gap-2 border-b border-white/10 pb-4">
+                    <Calculator className="w-5 h-5 text-[#0284C7]" />
+                    <h3 className="text-base md:text-lg font-bold text-white font-sans">
+                      {isAr ? "مقيِّم الكفاءة الإدارية للمؤسسات" : "SME Admin Health Evaluator"}
+                    </h3>
+                  </div>
+
+                  <p className="text-xs text-[#F5F5F0]/80 leading-relaxed font-sans">
+                    {isAr 
+                      ? "قيّم الوضع التنظيمي الحالي لشركتك لمعرفة نقاط القوة ومواطن التحسين الإداري المطلوبة:" 
+                      : "Evaluate your company's current organizational level to discover crucial improvements and action points:"}
+                  </p>
+
+                  <div className="space-y-3">
+                    {/* Checkbox 1 */}
+                    <label className="flex items-start gap-3 p-3 bg-[#1B2C6B]/50 border border-white/5 rounded-xl cursor-pointer hover:bg-[#1B2C6B]/80 transition-colors">
+                      <input 
+                        type="checkbox" 
+                        checked={hasSop} 
+                        onChange={(e) => setHasSop(e.target.checked)} 
+                        className="mt-0.5 w-4 h-4 rounded text-[#0284C7] focus:ring-[#0284C7] accent-[#0284C7]"
+                      />
+                      <div className="text-xs">
+                        <span className="font-bold text-white block">
+                          {isAr ? "أدلة تشغيل مكتوبة (SOPs)" : "Written Work Procedures (SOPs)"}
+                        </span>
+                        <span className="text-[10px] text-[#F5F5F0]/60">
+                          {isAr ? "هل لديك أدلة مكتوبة توضح كيفية تنفيذ المهام اليومية بالتفصيل؟" : "Are daily steps documented for employees?"}
+                        </span>
+                      </div>
+                    </label>
+
+                    {/* Checkbox 2 */}
+                    <label className="flex items-start gap-3 p-3 bg-[#1B2C6B]/50 border border-white/5 rounded-xl cursor-pointer hover:bg-[#1B2C6B]/80 transition-colors">
+                      <input 
+                        type="checkbox" 
+                        checked={hasOrgChart} 
+                        onChange={(e) => setHasOrgChart(e.target.checked)} 
+                        className="mt-0.5 w-4 h-4 rounded text-[#0284C7] focus:ring-[#0284C7] accent-[#0284C7]"
+                      />
+                      <div className="text-xs">
+                        <span className="font-bold text-white block">
+                          {isAr ? "هيكل تنظيمي وتوزيع واضح للأدوار" : "Defined Roles & Org Chart"}
+                        </span>
+                        <span className="text-[10px] text-[#F5F5F0]/60">
+                          {isAr ? "هل يمتلك كل موظف وصفاً وظيفياً محدداً وواضحاً؟" : "Does everyone have clear visual responsibilities?"}
+                        </span>
+                      </div>
+                    </label>
+
+                    {/* Checkbox 3 */}
+                    <label className="flex items-start gap-3 p-3 bg-[#1B2C6B]/50 border border-white/5 rounded-xl cursor-pointer hover:bg-[#1B2C6B]/80 transition-colors">
+                      <input 
+                        type="checkbox" 
+                        checked={hasDigitalRecord} 
+                        onChange={(e) => setHasDigitalRecord(e.target.checked)} 
+                        className="mt-0.5 w-4 h-4 rounded text-[#0284C7] focus:ring-[#0284C7] accent-[#0284C7]"
+                      />
+                      <div className="text-xs">
+                        <span className="font-bold text-white block">
+                          {isAr ? "أرشفة رقمية منظمة وسحابية" : "Digital Record Archiving"}
+                        </span>
+                        <span className="text-[10px] text-[#F5F5F0]/60">
+                          {isAr ? "هل يتم حفظ السجلات وتصنيفها إلكترونياً بشكل آمن وسهل الوصول؟" : "Are files organized in secure digital storage?"}
+                        </span>
+                      </div>
+                    </label>
+
+                    {/* Checkbox 4 */}
+                    <label className="flex items-start gap-3 p-3 bg-[#1B2C6B]/50 border border-white/5 rounded-xl cursor-pointer hover:bg-[#1B2C6B]/80 transition-colors">
+                      <input 
+                        type="checkbox" 
+                        checked={hasDailyPlan} 
+                        onChange={(e) => setHasDailyPlan(e.target.checked)} 
+                        className="mt-0.5 w-4 h-4 rounded text-[#0284C7] focus:ring-[#0284C7] accent-[#0284C7]"
+                      />
+                      <div className="text-xs">
+                        <span className="font-bold text-white block">
+                          {isAr ? "نظام مبرمج للتخطيط اليومي" : "Active Calendar & Daily Plan"}
+                        </span>
+                        <span className="text-[10px] text-[#F5F5F0]/60">
+                          {isAr ? "هل يتم متابعة المهام اليومية والأجندة بشكل دوري وممنهج؟" : "Are goals and operations actively tracked?"}
+                        </span>
+                      </div>
+                    </label>
+                  </div>
+
+                  {/* Calculated Health Score Panel */}
+                  <div className="p-4 bg-[#1B2C6B] border border-white/10 rounded-xl space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-[#F5F5F0]/80 font-sans">
+                        {isAr ? "مستوى الكفاءة التنظيمية الحالي" : "Current Organizational Health"}
+                      </span>
+                      <span className="text-sm font-bold text-white font-mono">{smeHealthScore}%</span>
+                    </div>
+                    
+                    {/* Score Bar */}
+                    <div className="w-full bg-white/10 h-2.5 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-[#0284C7] to-[#38BDF8] transition-all duration-500" 
+                        style={{ width: `${smeHealthScore}%` }}
+                      />
+                    </div>
+
+                    {/* Custom Recommendation based on Score */}
+                    <p className="text-[11px] text-[#F5F5F0]/80 leading-relaxed font-sans pt-1">
+                      {smeHealthScore === 100 ? (
+                        isAr 
+                          ? "رائع! شركتك تمتلك تنظيماً إدارياً متكاملاً. يمكننا دعمك بالاستشارات المتقدمة للمحافظة على هذا المستوى وتحسين الأداء التشغيلي بشكل مستدام." 
+                          : "Outstanding! Your SME has excellent structures. We can assist with periodic professional audits and continuous scaling strategies."
+                      ) : smeHealthScore >= 50 ? (
+                        isAr 
+                          ? "مستوى جيد، ولكن هناك فجوات تنظيمية. نقترح بدء صياغة اللوائح المتبقية وسد الفجوات للحفاظ على سلاسة نمو أعمالك وموظفيك." 
+                          : "Good progress, but some structure gaps exist. We recommend formalizing your incomplete policy areas to safely anchor your team's expansion."
+                      ) : (
+                        isAr 
+                          ? "التنظيم الحالي ضعيف ومجهد للأعمال. باقة التأسيس واللوائح الإدارية للمجموعة تساعدك في إعادة هيكلة شركتك وتحقيق الكفاءة المطلوبة فوراً." 
+                          : "Your workflow represents a high strain risk. Our fundamental startup and policy templates will rebuild your efficiency instantly."
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Disclaimer block */}
+                  <div className="bg-white/5 border border-white/5 p-3.5 rounded-xl flex gap-2">
+                    <AlertTriangle className="w-4 h-4 text-[#0284C7] shrink-0 mt-0.5" />
+                    <p className="text-[10px] text-[#F5F5F0]/70 font-sans leading-relaxed">
+                      {isAr 
+                        ? t.gate6Disclaimer
+                        : t.gate6Disclaimer}
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
+        <ServiceSeoContent gateId={gateId} isAr={isAr} />
 
       </div>
     </div>

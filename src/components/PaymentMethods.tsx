@@ -102,7 +102,7 @@ export default function PaymentMethods({ lang, onBack }: Props) {
       details: [
         { label: isAr ? "البريد الإلكتروني للـ Zelle" : "Zelle Email Address", value: "abuzaherkhaled@gmail.com" },
         { label: isAr ? "رقم الهاتف للـ Zelle" : "Zelle Registered Phone", value: "+1 (832) 407-2608" },
-        { label: isAr ? "اسم الحساب" : "Account Name", value: "Texas Gateway Multi Services Group" }
+        { label: isAr ? "اسم الحساب" : "Account Name", value: "Khaled M. Abu Zaher" }
       ]
     },
     {
@@ -114,21 +114,10 @@ export default function PaymentMethods({ lang, onBack }: Props) {
       accent: "text-amber-400 border-amber-500/30",
       details: [
         { label: isAr ? "اسم البنك" : "Bank Name", value: "Bank of America" },
-        { label: isAr ? "رقم التوجيه (Routing)" : "Routing Number (ACH/Wire)", value: "021000021" },
-        { label: isAr ? "رقم الحساب" : "Account Number", value: "987654321098" },
-        { label: isAr ? "اسم الحساب" : "Account Name", value: "Texas Gateway Multi Services Group" }
-      ]
-    },
-    {
-      id: "paypal",
-      name: t.paymentsPaypalName,
-      desc: t.paymentsPaypalDesc,
-      icon: PaypalLogo,
-      color: "from-blue-500/20 to-teal-500/20",
-      accent: "text-blue-400 border-blue-500/30",
-      details: [
-        { label: isAr ? "حساب PayPal الرسمي" : "PayPal Official Username", value: "payments@tgmsg.com" },
-        { label: isAr ? "رابط الدفع السريع" : "Quick Pay Link", value: "https://paypal.me/tgmsg" }
+        { label: isAr ? "رقم التوجيه (ACH)" : "Routing Number (ACH)", value: "111000025" },
+        { label: isAr ? "رقم التوجيه (Wire)" : "Routing Number (Wire)", value: "026009593" },
+        { label: isAr ? "رقم الحساب" : "Account Number", value: "488099906672" },
+        { label: isAr ? "اسم الحساب" : "Account Name", value: "Khaled M. Abu Zaher" }
       ]
     }
   ];
@@ -204,7 +193,7 @@ export default function PaymentMethods({ lang, onBack }: Props) {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {localMethods.map((method) => {
               const Icon = method.icon;
               return (

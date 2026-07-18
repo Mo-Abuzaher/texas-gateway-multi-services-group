@@ -244,6 +244,9 @@ export default function FooterCta({ lang, preselectedSector, onNavigateToTerms }
                       <option className="bg-white" value="Financial Services">
                         {isAr ? "الخدمات المالية" : "Financial Services"}
                       </option>
+                      <option className="bg-white" value="Management Services & Consulting">
+                        {isAr ? "الخدمات الإدارية والاستشارية" : "Management Services & Consulting"}
+                      </option>
                       <option className="bg-white" value="Other">
                         {isAr ? "أخرى / غير ذلك" : "Other"}
                       </option>
@@ -285,10 +288,7 @@ export default function FooterCta({ lang, preselectedSector, onNavigateToTerms }
                 </form>
               )}
 
-              <div className={`mt-6 pt-4 border-t border-black/5 flex justify-between items-center text-[10px] ${isAr ? "flex-row-reverse" : "flex-row"}`}>
-                <span className="font-mono text-[#2C2C2C]/40 flex items-center gap-1">
-                  🔒 SSL Secured Gateway
-                </span>
+              <div className={`mt-6 pt-4 border-t border-black/5 flex justify-end items-center text-[10px] ${isAr ? "flex-row-reverse" : "flex-row"}`}>
                 <button
                   type="button"
                   onClick={() => setIsInboxOpen(true)}

@@ -80,6 +80,13 @@ export interface TranslationSet {
   gate5BookkeepingTitle: string;
   gate5BookkeepingDesc: string;
 
+  gate6Title: string;
+  gate6Tag: string;
+  gate6Desc: string;
+  gate6ShortDesc: string;
+  gate6Tagline: string;
+  gate6Disclaimer: string;
+
   calcTitle: string;
   calcSub: string;
   calcDesc: string;
@@ -174,9 +181,9 @@ export const TRANSLATIONS: Record<"en" | "ar", TranslationSet> = {
     
     heroWelcome: "Welcome to Texas Gateway Multi Services Group",
     heroTag: "Integrated Business & Personal Solutions",
-    heroTitle1: "Five Gates.",
+    heroTitle1: "Six Gates.",
     heroTitle2: "Infinite Solutions.",
-    heroSubtitle: "Your premium gateway to U.S. Visas & Immigration, Certified Translation, Notary & Apostille, Legal Support, and Financial Services. We deliver complete regulatory alignment under one unified platform.",
+    heroSubtitle: "Your premium gateway to U.S. Visas & Immigration, Certified Translation, Notary & Apostille, Legal Support, Financial Services, and Management Services & Consulting. We deliver complete regulatory alignment under one unified platform.",
     heroCta: "Request a Free Consultation",
 
     freedomTitle: "FREEDOM 250 (1776 - 2026)",
@@ -196,9 +203,9 @@ export const TRANSLATIONS: Record<"en" | "ar", TranslationSet> = {
     founderEmail: "Official Email Address",
     founderLinkedin: "LinkedIn Profile",
 
-    gatesTitle: "The 5 Gates",
+    gatesTitle: "The 6 Gates",
     gatesSub: "Our Organizational Structure",
-    gatesDesc: "We provide comprehensive administrative, translation, attestation, legal support, and financial services under five specialized divisions to satisfy all personal and corporate development needs.",
+    gatesDesc: "We provide comprehensive administrative, translation, attestation, legal support, financial services, and professional management consulting under six specialized divisions to satisfy all personal and corporate development needs.",
     gatesClickToExpand: "Click on any Gate to explore detailed lists of services and solutions",
 
     gate1Title: "Visas & Immigration Services",
@@ -253,6 +260,13 @@ export const TRANSLATIONS: Record<"en" | "ar", TranslationSet> = {
     gate5BookkeepingTitle: "Part-Time Bookkeeping",
     gate5BookkeepingDesc: "Continuous transaction recording, bank account reconciliation, balance sheet management, and regular profit/loss reports.",
 
+    gate6Title: "Management Services & Consulting",
+    gate6Tag: "Gate 6",
+    gate6Desc: "We provide professional administrative and consulting solutions tailored to small and medium-sized businesses, with a focus on growth, business organization, and operational efficiency. We help business owners build clear systems, improve internal processes, and strengthen management in ways that fit the needs of growing companies.",
+    gate6ShortDesc: "Professional administrative and consulting services that help small and medium-sized businesses improve organization, development, and efficiency.",
+    gate6Tagline: "Your trusted administrative partner for practical and professional support for small and medium-sized businesses.",
+    gate6Disclaimer: "Our services are administrative, organizational, and general consulting in nature, and do not include licensed legal or accounting advice unless explicitly stated.",
+
     calcTitle: "Test the Intelligence Engine",
     calcSub: "Interactive Portal",
     calcDesc: "Experience Texas Gateway Multi Services Group’s simplified visa petition estimator to calculate standard approval statistics and RFE risk factors dynamically.",
@@ -295,7 +309,7 @@ export const TRANSLATIONS: Record<"en" | "ar", TranslationSet> = {
     contactFormSubmit: "Submit Consultation Request",
     contactAdminInbox: "Admin Inbox Portal",
 
-    statsSub: "Practice Portfolio",
+    statsSub: "Proven Results",
     statsApprovalIndex: "Success & Quality Index",
     statsCycleSpeedup: "Process Cycle Speedup",
     statsVisasManaged: "Completed Transactions",
@@ -346,9 +360,9 @@ export const TRANSLATIONS: Record<"en" | "ar", TranslationSet> = {
 
     heroWelcome: "مرحباً بكم في مجموعة بوابة تكساس للخدمات المتعددة",
     heroTag: "حلول متكاملة للأعمال والأفراد",
-    heroTitle1: "خمس بوابات.",
+    heroTitle1: "ست بوابات.",
     heroTitle2: "حلول لا حصر لها.",
-    heroSubtitle: "بوابتكم المتميزة للتأشيرات والهجرة الأمريكية، الترجمة المعتمدة، التوثيق والأبوستيل، الدعم القانوني، والخدمات المالية. نوفر لكم امتثالاً تنظيمياً متكاملاً تحت سقف واحد.",
+    heroSubtitle: "بوابتكم المتميزة للتأشيرات والهجرة الأمريكية، الترجمة المعتمدة، التوثيق والأبوستيل، الدعم القانوني، الخدمات المالية، والخدمات الإدارية والاستشارية. نوفر لكم امتثالاً تنظيمياً متكاملاً تحت سقف واحد.",
     heroCta: "طلب استشارة مجانية",
 
     freedomTitle: "FREEDOM 250 (1776 - 2026)",
@@ -368,9 +382,9 @@ export const TRANSLATIONS: Record<"en" | "ar", TranslationSet> = {
     founderEmail: "البريد الإلكتروني الرسمي",
     founderLinkedin: "الملف الشخصي على LinkedIn",
 
-    gatesTitle: "البوابات الخمسة",
+    gatesTitle: "البوابات الستة",
     gatesSub: "الهيكل التنظيمي للمجموعة",
-    gatesDesc: "نقدم خدماتنا المتكاملة في الدعم الإداري، الترجمة، التصديق، الدعم القانوني، والخدمات المالية عبر خمسة أقسام متخصصة تلبي كافة الاحتياجات التجارية والشخصية.",
+    gatesDesc: "نقدم خدماتنا المتكاملة في الدعم الإداري، الترجمة، التصديق، الدعم القانوني، الخدمات المالية، والخدمات الإدارية والاستشارية عبر ستة أقسام متخصصة تلبي كافة الاحتياجات التجارية والشخصية.",
     gatesClickToExpand: "اضغط على أي بوابة لاستكشاف قوائم الخدمات والحلول التفصيلية",
 
     gate1Title: "خدمات التأشيرات والهجرة الأمريكية",
@@ -423,7 +437,14 @@ export const TRANSLATIONS: Record<"en" | "ar", TranslationSet> = {
     gate5PayrollTitle: "إدارة الرواتب والأجور (Payroll)",
     gate5PayrollDesc: "حساب الرواتب الأسبوعية والشهرية، واقتطاعات الضرائب، وإصدار كشوفات الأجور بما يتوافق مع قوانين العمل الأمريكية.",
     gate5BookkeepingTitle: "إمساك الدفاتر والمحاسبة الجزئية",
-    gate5BookkeepingDesc: "تسجيل المعاملات اليومية، ومطابقة الحسابات البنكية، وإعداد الميزانيات، وتقارير الأرباح والخسائر الدورية.",
+    gate5BookkeepingDesc: "تسجيل المعاملات اليومية، ومطابقة الحسابات البنكية، وإإعداد الميزانيات، وتقارير الأرباح والخسائر الدورية.",
+
+    gate6Title: "الخدمات الإدارية والاستشارية",
+    gate6Tag: "البوابة 6",
+    gate6Desc: "نقدّم حلولًا إدارية واستشارية مهنية موجهة للشركات الصغيرة والمتوسطة، بهدف دعم النمو، وتنظيم الأعمال، وتحسين الأداء التشغيلي بأسلوب عملي وفعّال. نساعد أصحاب الأعمال على بناء أنظمة واضحة، وتطوير الإجراءات الداخلية، ورفع كفاءة الإدارة بما يتناسب مع احتياجات الشركات النامية.",
+    gate6ShortDesc: "خدمات إدارية واستشارية مهنية تساعد الشركات الصغيرة والمتوسطة على التنظيم، التطوير، ورفع الكفاءة.",
+    gate6Tagline: "شريكك الإداري الموثوق لدعم الشركات الصغيرة والمتوسطة بحلول عملية واحترافية.",
+    gate6Disclaimer: "خدماتنا ذات طابع إداري وتنظيمي واستشاري عام، ولا تشمل المشورة القانونية أو المحاسبية المرخصة إلا إذا تم النص على ذلك صراحةً.",
 
     calcTitle: "اختبر أداة تقييم المعاملات",
     calcSub: "البوابة التفاعلية",
@@ -467,7 +488,7 @@ export const TRANSLATIONS: Record<"en" | "ar", TranslationSet> = {
     contactFormSubmit: "إرسال طلب الاستشارة",
     contactAdminInbox: "بوابة صندوق الوارد الإداري",
 
-    statsSub: "محفظة الأعمال والخدمات",
+    statsSub: "نتائج مؤكدة",
     statsApprovalIndex: "مؤشر الجودة والنجاح الفائق",
     statsCycleSpeedup: "تسريع دورة إنجاز المعاملات",
     statsVisasManaged: "المعاملات المكتملة بنجاح",

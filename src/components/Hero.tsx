@@ -3,12 +3,13 @@ import { motion, useScroll, useTransform } from "motion/react";
 import Navbar from "./Navbar";
 import SeamlessVideo from "./SeamlessVideo";
 import { TRANSLATIONS } from "../translations";
+import { PageId } from "../seo";
 
 interface Props {
   lang: "en" | "ar";
   setLang: (lang: "en" | "ar") => void;
-  currentPage: "home" | "about" | "gate1" | "gate2" | "gate3" | "gate4" | "gate5" | "payments" | "terms";
-  setCurrentPage: (page: "home" | "about" | "gate1" | "gate2" | "gate3" | "gate4" | "gate5" | "payments" | "terms") => void;
+  currentPage: PageId;
+  setCurrentPage: (page: PageId) => void;
 }
 
 export default function Hero({ lang, setLang, currentPage, setCurrentPage }: Props) {
